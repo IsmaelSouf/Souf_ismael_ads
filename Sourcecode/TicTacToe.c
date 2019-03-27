@@ -129,18 +129,18 @@ void Game(struct TicTacToe **gameOne, int gameID, char choices[10], char symbols
 //Read every move of the game into the file
 void read(struct TicTacToe **gameOne)
 {
-    FILE *outfile = fopen("save.txt","r");
+    FILE *infile = fopen("save.txt","r");
     char symbols[MAX];
     char choices[MAX];
     int count = 0;
     
-    while(fscanf(outfile, "%s %s", choices, symbols) != EOF)
+    while(fscanf(infile, "%s %s", choices, symbols) != EOF)
     {
         Game(gameOne, count, choices, symbols);
         count++;
     }
     
-    fclose(outfile);
+    fclose(infile);
 }
 
 //Function to find record game
@@ -205,12 +205,12 @@ void recordGame(struct TicTacToe ** gameOne, int gameID){
 //Write every moves into the file using arrays
 void write(char * choices, char * symbols)
 {
-    FILE *infile = fopen("save.txt", "a+");
-    if (infile != NULL)
+    FILE *file = fopen("save.txt", "a+");
+    if (file != NULL)
     {
         
-        fprintf(infile,"%s %s\n",choices, symbols);
-        fclose(infile);
+        fprintf(file,"%s %s\n",choices, symbols);
+        fclose(file);
     }
     else
     {
