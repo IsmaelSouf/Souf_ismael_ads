@@ -202,7 +202,7 @@ void recordGame(struct TicTacToe ** gameOne, int gameID){
     }
 }
 
-//Write every moves into the file using arrays
+//Write every moves into the file
 void write(char * choices, char * symbols)
 {
     FILE *file = fopen("save.txt", "a+");
