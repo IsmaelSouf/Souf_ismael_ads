@@ -13,7 +13,7 @@ struct TicTacToe
 {
     int gameID;
     char choices[MAX];
-    char marks[MAX];
+    char symbols[MAX];
     struct TicTacToe *next;
 };
 
@@ -42,12 +42,12 @@ int stackEmpty();
 char pop();
 void resetBoard();
 void Game();
-void Read();
+void read();
 void createBoard();
 void recordGame();
 void write();
 void replay();
-void reset_moves();
+void resetMoves();
 void undoMove();
 void redoMove();
 int  gameWin();
@@ -105,15 +105,13 @@ void resetBoard()
 }
 
 //Function to create a TicTacToe game
-void Game(struct TicTacToe **gameOne, int gameID, char choices[10], char marks[10])
+void Game(struct TicTacToe **gameOne, int gameID, char choices[10], char symbols[10])
 {
     struct TicTacToe *new_game = (struct TicTacToe*)malloc(sizeof(struct TicTacToe));
     struct TicTacToe *last_game = *gameOne;
     new_game->gameID = gameID;
     strcpy(new_game->choices,choices);
-    printf("choices are %s\n", new_game->choices);
-    strcpy(new_game->marks, marks);
-    printf("marks are %s\n\n",new_game->marks);
+    strcpy(new_game->symbols, symbols);
     new_game->next = NULL;
     if(*gameOne == NULL)
     {
@@ -129,16 +127,16 @@ void Game(struct TicTacToe **gameOne, int gameID, char choices[10], char marks[1
 }
 
 //Read every move of the game into the file
-void Read(struct TicTacToe **gameOne)
+void read(struct TicTacToe **gameOne)
 {
     FILE *file = fopen("save.txt","r");
-    char marks[MAX];
+    char symbols[MAX];
     char choices[MAX];
     int count = 0;
     
-    while(fscanf(file, "%s %s", choices, marks) != EOF)
+    while(fscanf(file, "%s %s", choices, symbols) != EOF)
     {
-        Game(gameOne, count, choices, marks);
+        Game(gameOne, count, choices, symbols);
         count++;
     }
     
@@ -155,40 +153,40 @@ void recordGame(struct TicTacToe ** gameOne, int gameID){
             found = 1;
             for(int i = 0; i < 9; i ++){
                 
-                if(current_game->choices[i] == '1' && (current_game->marks[i] == 'O' || current_game->marks[i] == 'X')){
-                    board[1] = current_game->marks[i];
+                if(current_game->choices[i] == '1' && (current_game->symbols[i] == 'O' || current_game->symbols[i] == 'X')){
+                    board[1] = current_game->symbols[i];
                     createBoard();
                 }
-                else if(current_game->choices[i] == '2' && (current_game->marks[i] == 'O' || current_game->marks[i] == 'X')){
-                    board[2] = current_game->marks[i];
+                else if(current_game->choices[i] == '2' && (current_game->symbols[i] == 'O' || current_game->symbols[i] == 'X')){
+                    board[2] = current_game->symbols[i];
                     createBoard();
                 }
-                else if(current_game->choices[i] == '3' && (current_game->marks[i] == 'O' || current_game->marks[i] == 'X')){
-                    board[3] = current_game->marks[i];
+                else if(current_game->choices[i] == '3' && (current_game->symbols[i] == 'O' || current_game->symbols[i] == 'X')){
+                    board[3] = current_game->symbols[i];
                     createBoard();
                 }
-                else if(current_game->choices[i] == '4' && (current_game->marks[i] == 'O' || current_game->marks[i] == 'X')){
-                    board[4] = current_game->marks[i];
+                else if(current_game->choices[i] == '4' && (current_game->symbols[i] == 'O' || current_game->symbols[i] == 'X')){
+                    board[4] = current_game->symbols[i];
                     createBoard();
                 }
-                else if(current_game->choices[i] == '5' && (current_game->marks[i] == 'O' || current_game->marks[i] == 'X')){
-                    board[5] = current_game->marks[i];
+                else if(current_game->choices[i] == '5' && (current_game->symbols[i] == 'O' || current_game->symbols[i] == 'X')){
+                    board[5] = current_game->symbols[i];
                     createBoard();
                 }
-                else if(current_game->choices[i] == '6' && (current_game->marks[i] == 'O' || current_game->marks[i] == 'X')){
-                    board[6] = current_game->marks[i];
+                else if(current_game->choices[i] == '6' && (current_game->symbols[i] == 'O' || current_game->symbols[i] == 'X')){
+                    board[6] = current_game->symbols[i];
                     createBoard();
                 }
-                else if(current_game->choices[i] == '7' && (current_game->marks[i] == 'O' || current_game->marks[i] == 'X')){
-                    board[7] = current_game->marks[i];
+                else if(current_game->choices[i] == '7' && (current_game->symbols[i] == 'O' || current_game->symbols[i] == 'X')){
+                    board[7] = current_game->symbols[i];
                     createBoard();
                 }
-                else if(current_game->choices[i] == '8' && (current_game->marks[i] == 'O' || current_game->marks[i] == 'X')){
-                    board[8] = current_game->marks[i];
+                else if(current_game->choices[i] == '8' && (current_game->symbols[i] == 'O' || current_game->symbols[i] == 'X')){
+                    board[8] = current_game->symbols[i];
                     createBoard();
                 }
-                else if(current_game->choices[i] == '9' && (current_game->marks[i] == 'O' || current_game->marks[i] == 'X')){
-                    board[9] = current_game->marks[i];
+                else if(current_game->choices[i] == '9' && (current_game->symbols[i] == 'O' || current_game->symbols[i] == 'X')){
+                    board[9] = current_game->symbols[i];
                     createBoard();
                 }
             }
@@ -205,64 +203,69 @@ void recordGame(struct TicTacToe ** gameOne, int gameID){
 }
 
 //Write every moves into the file using arrays
-void write(char * choices, char * marks)
+void write(char * choices, char * symbols)
 {
     FILE *fp = fopen("save.txt", "a+");
     if (fp != NULL)
     {
         
-        fprintf(fp,"%s %s\n",choices, marks);
+        fprintf(fp,"%s %s\n",choices, symbols);
         fclose(fp);
+    }
+    else
+    {
+        printf("The file for storing choices and marks is empty\n");
+        return;
     }
 }
 
 //Replay move played during the tic tac toe game
-void replay(char *choices, char *marks){
+void replay(char *choices, char *symbols){
     
     for(int i = 1; i < 10; i++){
         
-        if(choices[i] == '1' && (marks[i] == 'O' || marks[i] == 'X')){
-            board[1] = marks[i];
+        if(choices[i] == '1' && (symbols[i] == 'O' || symbols[i] == 'X')){
+            board[1] = symbols[i];
             createBoard();
         }
         
-        else if(choices[i] == '2' && (marks[i] == 'O' || marks[i] == 'X')){
-            board[2] = marks[i];
+        else if(choices[i] == '2' && (symbols[i] == 'O' || symbols[i] == 'X')){
+            board[2] = symbols[i];
             createBoard();
         }
         
-        else if(choices[i] == '3' && (marks[i] == 'O' || marks[i] == 'X')){
-            board[3] = marks[i];
+        else if(choices[i] == '3' && (symbols[i] == 'O' || symbols[i] == 'X')){
+            board[3] = symbols[i];
             createBoard();
         }
         
-        else if(choices[i] == '4' && (marks[i] == 'O' || marks[i] == 'X')){
-            board[4] = marks[i];
+        else if(choices[i] == '4' && (symbols[i] == 'O' || symbols[i] == 'X')){
+            board[4] = symbols[i];
             createBoard();
         }
         
-        else if(choices[i] == '5' && (marks[i] == 'O' || marks[i] == 'X')){
-            board[5] = marks[i];
+        else if(choices[i] == '5' && (symbols[i] == 'O' || symbols[i] == 'X')){
+            board[5] = symbols[i];
             createBoard();
         }
         
-        else if(choices[i] == '6' && (marks[i] == 'O' || marks[i] == 'X')){
-            board[6] = marks[i];
+        else if(choices[i] == '6' && (symbols[i] == 'O' || symbols[i] == 'X')){
+            board[6] = symbols[i];
             createBoard();
         }
         
-        else if(choices[i] == '7' && (marks[i] == 'O' || marks[i] == 'X')){
-            board[7] = marks[i];
+        else if(choices[i] == '7' && (symbols[i] == 'O' || symbols[i] == 'X')){
+            board[7] = symbols[i];
             createBoard();
         }
         
-        else if(choices[i] == '8' && (marks[i] == 'O' || marks[i] == 'X')){
-            board[8] = marks[i];
+        else if(choices[i] == '8' && (symbols[i] == 'O' || symbols[i] == 'X')){
+            board[8] = symbols[i];
             createBoard();
         }
         
-        else if(choices[i] == '9' && (marks[i] == 'O' || marks[i] == 'X')){
-            board[9] = marks[i];
+        else if(choices[i] == '9' && (symbols[i] == 'O' || symbols[i] == 'X')){
+            board[9] = symbols[i];
             createBoard();
         }
         
@@ -271,7 +274,7 @@ void replay(char *choices, char *marks){
 }
 
 //Reset moves of the game
-void reset_moves(char * choices, char * marks){
+void resetMoves(char * choices, char * symbols){
     choices[1] = '1';
     choices[2] = '2';
     choices[3] = '3';
@@ -281,22 +284,22 @@ void reset_moves(char * choices, char * marks){
     choices[7] = '7';
     choices[8] = '8';
     choices[9] = '9';
-    marks[1] = '1';
-    marks[2] = '2';
-    marks[3] = '3';
-    marks[4] = '4';
-    marks[5] = '5';
-    marks[6] = '6';
-    marks[7] = '7';
-    marks[8] = '8';
-    marks[9] = '9';
+    symbols[1] = '1';
+    symbols[2] = '2';
+    symbols[3] = '3';
+    symbols[4] = '4';
+    symbols[5] = '5';
+    symbols[6] = '6';
+    symbols[7] = '7';
+    symbols[8] = '8';
+    symbols[9] = '9';
 }
 
 //Function to undo move on the board
-void undoMove(struct stack * undoMarks, struct stack * undoChoices, struct stack * redoMarks, struct stack * redoChoices){
-    char mark = pop(undoMarks);
+void undoMove(struct stack * undoSymbols, struct stack * undoChoices, struct stack * redoSymbols, struct stack * redoChoices){
+    char symbol = pop(undoSymbols);
     char choice = pop(undoChoices);
-    push(redoMarks, mark);
+    push(redoSymbols, symbol);
     push(redoChoices, choice);
     
     if(choice == '1'){
@@ -328,37 +331,37 @@ void undoMove(struct stack * undoMarks, struct stack * undoChoices, struct stack
     }
 }
 //Function to redo move on the board
-void redoMove(struct stack * undoMarks, struct stack * undoChoices, struct stack * redoMarks, struct stack * redoChoices){
-    char mark = pop(redoMarks);
+void redoMove(struct stack * undoSymbols, struct stack * undoChoices, struct stack * redoSymbols, struct stack * redoChoices){
+    char symbol = pop(redoSymbols);
     char choice = pop(redoChoices);
-    push(undoMarks, mark);
+    push(undoSymbols, symbol);
     push(undoChoices, choice);
     if(choice == '1'){
-        board[1] = mark;
+        board[1] = symbol;
     }
     else if(choice == '2'){
-        board[2] = mark;
+        board[2] = symbol;
     }
     else if(choice == '3'){
-        board[3] = mark;
+        board[3] = symbol;
     }
     else if(choice == '4'){
-        board[4] = mark;
+        board[4] = symbol;
     }
     else if(choice == '5'){
-        board[5] = mark;
+        board[5] = symbol;
     }
     else if(choice == '6'){
-        board[6] = mark;
+        board[6] = symbol;
     }
     else if(choice == '7'){
-        board[7] = mark;
+        board[7] = symbol;
     }
     else if(choice == '8'){
-        board[8] = mark;
+        board[8] = symbol;
     }
     else if(choice == '9'){
-        board[9] = mark;
+        board[9] = symbol;
     }
 }
 
@@ -376,8 +379,7 @@ void main_menu()
 //main function
 int main(){
     
-    char confirm[20];
-    
+    char option[10];
     while(1){
         int start;
         main_menu();
@@ -393,15 +395,15 @@ int main(){
                 
                 int player = 1, i, choice;
                 
-                char mark;
+                char symbol;
                 
                 int j = 1;
-                reset_moves(choices, symbols);
+                resetMoves(choices, symbols);
                 
                 //Create stack of capacity 9
-                struct stack * UndoMarks = init_stack(9);
+                struct stack * UndoSymbols = init_stack(9);
                 struct stack * UndoChoices = init_stack(9);
-                struct stack * RedoMarks = init_stack(9);
+                struct stack * RedoSymbols = init_stack(9);
                 struct stack * RedoChoices = init_stack(9);
                 
                 createBoard();
@@ -412,7 +414,7 @@ int main(){
                     createBoard();
                     
                     player = (player % 2) ? 1 : 2;
-                    mark = (player == 1) ? 'X' : 'O';
+                    symbol = (player == 1) ? 'X' : 'O';
                     
                     printf("Player %d, enter a number (PRESS 10 to undo/ PRESS 11 to redo) ", player);
                     scanf("%d", &choice);
@@ -420,99 +422,99 @@ int main(){
                     //Set the choice selected to be the mark on the board, push into the stack in order to allow undo
                     if(choice == 1 && board[1] == '1')
                     {
-                        board[1] = mark;
-                        symbols[j] = mark;
+                        board[1] = symbol;
+                        symbols[j] = symbol;
                         choices[j] = '1';
                         j++;
                         push(UndoChoices, '1');
-                        push(UndoMarks, mark);
+                        push(UndoSymbols, symbol);
                         createBoard();
                     }
                     else if(choice == 2 && board[2] == '2'){
-                        board[2] = mark;
-                        symbols[j] = mark;
+                        board[2] = symbol;
+                        symbols[j] = symbol;
                         choices[j] = '2';
                         j++;
                         push(UndoChoices, '2');
-                        push(UndoMarks, mark);
+                        push(UndoSymbols, symbol);
                         createBoard();
                     }
                     
                     else if(choice == 3 && board[3] == '3'){
-                        board[3] = mark;
-                        symbols[j] = mark;
+                        board[3] = symbol;
+                        symbols[j] = symbol;
                         choices[j] = '3';
                         j++;
                         push(UndoChoices, '3');
-                        push(UndoMarks, mark);
+                        push(UndoSymbols, symbol);
                         createBoard();
                     }
                     
                     else if(choice == 4 && board[4] == '4'){
-                        board[4] = mark;
-                        symbols[j] = mark;
+                        board[4] = symbol;
+                        symbols[j] = symbol;
                         choices[j] = '4';
                         j++;
                         push(UndoChoices, '4');
-                        push(UndoMarks, mark);
+                        push(UndoSymbols, symbol);
                         createBoard();
                     }
                     
                     else if(choice == 5 && board[5] == '5'){
-                        board[5] = mark;
-                        symbols[j] = mark;
+                        board[5] = symbol;
+                        symbols[j] = symbol;
                         choices[j] = '5';
                         j++;
                         push(UndoChoices, '5');
-                        push(UndoMarks, mark);
+                        push(UndoSymbols, symbol);
                         createBoard();
                     }
                     
                     else if(choice == 6 && board[6] == '6'){
-                        board[6] = mark;
-                        symbols[j] = mark;
+                        board[6] = symbol;
+                        symbols[j] = symbol;
                         choices[j] = '6';
                         j++;
                         push(UndoChoices, '6');
-                        push(UndoMarks, mark);
+                        push(UndoSymbols, symbol);
                         createBoard();
                     }
                     
                     else if(choice == 7 && board[7] == '7'){
-                        board[7] = mark;
-                        symbols[j] = mark;
+                        board[7] = symbol;
+                        symbols[j] = symbol;
                         choices[j] = '7';
                         j++;
                         push(UndoChoices, '7');
-                        push(UndoMarks, mark);
+                        push(UndoSymbols, symbol);
                         createBoard();
                     }
                     
                     else if(choice == 8 && board[8] == '8'){
-                        board[8] = mark;
-                        symbols[j] = mark;
+                        board[8] = symbol;
+                        symbols[j] = symbol;
                         choices[j] = '8';
                         j++;
                         push(UndoChoices, '8');
-                        push(UndoMarks, mark);
+                        push(UndoSymbols, symbol);
                         createBoard();
                     }
                     else if(choice == 9 && board[9] == '9'){
-                        board[9] = mark;
-                        symbols[j] = mark;
+                        board[9] = symbol;
+                        symbols[j] = symbol;
                         choices[j] = '9';
                         j++;
                         push(UndoChoices, '9');
-                        push(UndoMarks, mark);
+                        push(UndoSymbols, symbol);
                         createBoard();
                         
                         
                     }
                     
                     else if(choice == 10){
-                        if(!(stackEmpty(UndoChoices) && stackEmpty(UndoMarks)))
+                        if(!(stackEmpty(UndoChoices) && stackEmpty(UndoSymbols)))
                         {
-                            undoMove(UndoMarks, UndoChoices, RedoMarks, RedoChoices);
+                            undoMove(UndoSymbols, UndoChoices, UndoSymbols, RedoChoices);
                             createBoard();
                         }
                         else
@@ -524,10 +526,9 @@ int main(){
                     }
                     
                     else if(choice == 11){
-                        if(!(stackEmpty(RedoChoices) && stackEmpty(RedoMarks)))
+                        if(!(stackEmpty(RedoChoices) && stackEmpty(UndoSymbols)))
                         {
-                            
-                            redoMove(UndoMarks,UndoChoices,RedoMarks,RedoChoices);
+                            redoMove(UndoSymbols,UndoChoices,UndoSymbols,RedoChoices);
                             createBoard();
                         }
                         else
@@ -560,17 +561,17 @@ int main(){
                         printf("%c", UndoChoices->moves[i]);
                     }
                     printf("\n");
-                    for(int i = 0; i <= UndoMarks->top;  i++){
-                        printf("%c", UndoMarks->moves[i]);
+                    for(int i = 0; i <= UndoSymbols->top;  i++){
+                        printf("%c", UndoSymbols->moves[i]);
                     }
                     
-                    write(UndoChoices->moves, UndoMarks->moves);
+                    write(UndoChoices->moves, UndoSymbols->moves);
                     
                     getchar();
                     resetBoard();
                     replay(choices,symbols);
                     printf("\nPlay Again?(yes/no)\n");
-                    scanf("%s", confirm);
+                    scanf("%s", option);
                 }
                 else
                 {
@@ -579,34 +580,33 @@ int main(){
                         printf("%c", UndoChoices->moves[i]);
                     }
                     printf("\n");
-                    for(int i = 0; i <= UndoMarks->top;  i++){
-                        printf("%c", UndoMarks->moves[i]);
+                    for(int i = 0; i <= UndoSymbols->top;  i++){
+                        printf("%c", UndoSymbols->moves[i]);
                     }
-                    write(UndoChoices->moves, UndoMarks->moves);
+                    write(UndoChoices->moves, UndoSymbols->moves);
                     getchar();
                     resetBoard();
                     replay(choices,symbols);
                     printf("Play Again?(yes/no)\n");
-                    scanf("%s", confirm);
+                    scanf("%s", option);
                 }
                 getchar();
                 
-            }while(strcmp(confirm, "yes") == 0);
+            }while(strcmp(option, "yes") == 0);
         }
         
         else if(start == 2){
-            
             int gameID = -1;
             resetBoard();
             createBoard();
             struct TicTacToe * game = NULL;
             printf("Game\n");
-            Read(&game);
+            read(&game);
             printf("\nEnter Game Id: ");
             scanf("%d", &gameID);
             printf("gameID is %d\n", gameID);
             recordGame(&game, gameID);
-            scanf("%s", confirm);
+            scanf("%s", option);
             system("clear");
         }
         else if(start == 3)
@@ -617,13 +617,14 @@ int main(){
             printf("3. The first player to get 3 of her marks in a row (up, down, across, or diagonally) is the winner.\n");
             printf("4. When all 9 squares are full, the game is over. If no player has 3 marks in a row, the game ends in a tie.\n\n");
             printf("Press any key to go back to the main menu\n");
-            scanf("%s", confirm);
+            scanf("%s", option);
             system("clear");
             
         }
         else
         {
             printf("Please Select 0. Exit, 1. Game, 2. Search Game. or 3. Help.\n");
+            exit(1);
         }
         
     }
@@ -684,5 +685,6 @@ void createBoard(){
     
     printf("       |       |     \n\n");
 }
+
 
 
